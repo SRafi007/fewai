@@ -107,10 +107,7 @@ export const ThisOrThat = ({ onNext, onBack, setThisOrThat }) => {
   return (
     <div className="space-y-10 animate-fade-in">
       <div className="text-center mb-6">
-        <h2 className="text-3xl md:text-5xl font-heading text-[#FF2A6D] mb-3">Choose Your Preference</h2>
-        <p className="text-[#A3A8B8] text-sm md:text-base max-w-xl mx-auto">
-          Help us understand your taste by selecting which option appeals more to you
-        </p>
+        <h2 className="text-xl md:text-xl font-semibold text-[#FF2A6D] mb-3">Choose Your Preference</h2>
       </div>
 
       {/* This or That icon */}

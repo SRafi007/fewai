@@ -96,30 +96,25 @@ const MOOD_MAPPINGS: Record<string, MoodMapping> = {
 };
 
 const VISUAL_MAPPINGS: Record<string, VisualMapping> = {
-  'epic-space': {
-    id: 'epic-space',
-    aestheticTags: ['space', 'cosmic', 'grand-scale'],
-    eraTag: 'futuristic'
-  },
-  'romantic-dream': {
-    id: 'romantic-dream',
-    aestheticTags: ['dreamy', 'intimate', 'soft-focus'],
+  'beach': {
+    id: 'beach',
+    aestheticTags: ['romantic', 'relaxing', 'scenic'],
     eraTag: 'timeless'
   },
-  'chill-vibes': {
-    id: 'chill-vibes',
-    aestheticTags: ['lofi', 'relaxed', 'casual'],
-    eraTag: 'contemporary'
+  'mountain': {
+    id: 'mountain',
+    aestheticTags: ['adventure', 'epic', 'challenging'],
+    eraTag: 'timeless'
   },
-  'retro-action': {
-    id: 'retro-action',
-    aestheticTags: ['nostalgic', 'adrenaline', 'classic'],
-    eraTag: 'retro'
-  },
-  'neon-horror': {
-    id: 'neon-horror',
-    aestheticTags: ['dark', 'intense', 'stylized'],
+  'city': {
+    id: 'city',
+    aestheticTags: ['thriller', 'fast-paced', 'contemporary'],
     eraTag: 'modern'
+  },
+  'forest': {
+    id: 'forest',
+    aestheticTags: ['mysterious', 'atmospheric', 'secluded'],
+    eraTag: 'timeless'
   }
 };
 

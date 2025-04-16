@@ -106,9 +106,12 @@ export const MovieOutput = ({ basicPreferences, thisOrThat, movieTinderChoice, o
     }
   }, [recommendation]);
 
+  // Inside the useEffect of MovieOutput.jsx
   useEffect(() => {
     // Simulate API loading
     setIsLoading(true);
+
+    console.log(basicPreferences,movieTinderChoice,thisOrThat,visualChoice)
     
     const timeout = setTimeout(() => {
       // Simple algorithm using input to determine a theme
@@ -119,8 +122,27 @@ export const MovieOutput = ({ basicPreferences, thisOrThat, movieTinderChoice, o
 
       // Randomize order slightly
       movies.sort(() => 0.5 - Math.random());
-
-      if (movieTinderChoice?.liked && movieTinderChoice?.vibe?.includes('Thriller')) {
+      
+      // Handle new visual choices
+      if (basicPreferences?.visualChoice?.id === 'beach') {
+        mood = 'Romantic Escape';
+        themeColor = '#00F5D4';
+        vibe = 'Stories filled with romance, breathtaking scenery, and emotional connection.';
+      } else if (basicPreferences?.visualChoice?.id === 'mountain') {
+        mood = 'Epic Adventurer';
+        themeColor = '#FF2A6D';
+        vibe = 'Grand adventures, challenging journeys, and stunning landscapes await.';
+      } else if (basicPreferences?.visualChoice?.id === 'city') {
+        mood = 'Urban Thriller';
+        themeColor = '#B14EFF';
+        vibe = 'Fast-paced stories with twists and turns in metropolitan settings.';
+      } else if (basicPreferences?.visualChoice?.id === 'forest') {
+        mood = 'Mystic Explorer';
+        themeColor = '#00AAFF';
+        vibe = 'Atmospheric tales with mystery, seclusion, and natural wonder.';
+      }
+      // Keep existing conditions
+      else if (movieTinderChoice?.liked && movieTinderChoice?.vibe?.includes('Thriller')) {
         mood = 'Mind Bender';
         themeColor = '#FF2A6D';
         vibe = 'You love intense, mind-twisting experiences that challenge perception.';
@@ -140,6 +162,7 @@ export const MovieOutput = ({ basicPreferences, thisOrThat, movieTinderChoice, o
 
     return () => clearTimeout(timeout);
   }, [basicPreferences, thisOrThat, movieTinderChoice]);
+
 
   // Function to render movie streaming availability badges
   const renderAvailability = (platforms) => {

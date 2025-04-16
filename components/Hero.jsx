@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useState, useRef } from 'react';
+import Link from "next/link";
 import { ChevronRight, Zap } from 'lucide-react';
 
 // Background floating images
@@ -16,29 +17,71 @@ export default function HeroSection() {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [animationComplete, setAnimationComplete] = useState(false);
   const [imageStyles, setImageStyles] = useState([]);
+  const [windowWidth, setWindowWidth] = useState(0);
   const initialized = useRef(false);
   
   useEffect(() => {
-    if (!initialized.current) {
-      // Generate static values once on client-side
-      const styles = backgroundImages.map((_, index) => ({
-        width: `${Math.max(100, Math.min(200, 100 + Math.random() * 100))}px`,
-        height: `${Math.max(100, Math.min(200, 100 + Math.random() * 100))}px`,
-        left: `${(index % 3) * 33 + Math.random() * 20}%`,
-        top: `${Math.floor(index / 3) * 40 + Math.random() * 20}%`,
-        rotate: Math.random() * 20 - 10,
-        zIndex: Math.floor(Math.random() * 3),
-      }));
-      
-      setImageStyles(styles);
-      initialized.current = true;
-    }
+    // Set initial window width
+    setWindowWidth(window.innerWidth);
+    
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      // Reset initialization when screen size changes significantly
+      if (Math.abs(windowWidth - window.innerWidth) > 200) {
+        initialized.current = false;
+      }
+    };
     
     const handleScroll = () => {
       setScrollPosition(window.scrollY);
     };
     
+    // Generate the image styles based on screen size
+    if (!initialized.current) {
+      const isMobile = window.innerWidth < 768;
+      const styles = backgroundImages.map((_, index) => {
+        // Create a more spread out grid for mobile
+        let leftPosition, topPosition;
+        
+        // Square size - consistent across all devices
+        // We'll use random sizes but maintain aspect ratio 1:1
+        const baseSize = isMobile ? 90 : 120;
+        const randomAddition = isMobile ? 30 : 40;
+        const size = Math.max(baseSize, Math.min(baseSize + randomAddition, baseSize + Math.random() * randomAddition));
+        
+        if (isMobile) {
+          // For mobile: Create a 2x3 grid with more spacing and shifted left
+          const col = index % 2;
+          const row = Math.floor(index / 2);
+          // Move images slightly to the left by reducing the starting point
+          leftPosition = `${col * 50 + 5 + (Math.random() * 10)}%`; // Shifted left (from 15% to 5%)
+          topPosition = `${row * 28 + 5 + (Math.random() * 10)}%`;
+        } else {
+          // For desktop: Original 3x2 grid
+          const col = index % 3;
+          const row = Math.floor(index / 3);
+          leftPosition = `${col * 33 + (Math.random() * 20)}%`;
+          topPosition = `${row * 40 + (Math.random() * 20)}%`;
+        }
+        
+        return {
+          // Same width and height to ensure square shape
+          width: `${size}px`,
+          height: `${size}px`,
+          left: leftPosition,
+          top: topPosition,
+          rotate: Math.random() * 20 - 10,
+          zIndex: Math.floor(Math.random() * 3),
+          opacity: isMobile ? 0.3 : 0.4,
+        };
+      });
+      
+      setImageStyles(styles);
+      initialized.current = true;
+    }
+    
     window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
     
     // Trigger animation after 600ms
     const timeout = setTimeout(() => {
@@ -47,9 +90,10 @@ export default function HeroSection() {
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
       clearTimeout(timeout);
     };
-  }, []);
+  }, [windowWidth]);
 
   return (
     <section className="relative overflow-hidden h-screen w-full bg-gradient-to-b from-[#050816] to-[#0B1026]">
@@ -58,13 +102,14 @@ export default function HeroSection() {
         {imageStyles.length > 0 && backgroundImages.map((img, index) => (
           <div 
             key={index}
-            className="absolute rounded-2xl overflow-hidden shadow-lg shadow-blue-500/10 opacity-40"
+            className="absolute rounded-2xl overflow-hidden shadow-lg shadow-blue-500/10"
             style={{
               width: imageStyles[index].width,
               height: imageStyles[index].height,
               left: imageStyles[index].left,
               top: imageStyles[index].top,
-              transform: `rotate(${imageStyles[index].rotate}deg) translate(${Math.sin(scrollPosition / 1000 + index) * 20}px, ${Math.cos(scrollPosition / 1000 + index) * 20}px)`,
+              opacity: imageStyles[index].opacity,
+              transform: `rotate(${imageStyles[index].rotate}deg) translate(${Math.sin(scrollPosition / 1000 + index) * (windowWidth < 768 ? 10 : 20)}px, ${Math.cos(scrollPosition / 1000 + index) * (windowWidth < 768 ? 10 : 20)}px)`,
               transition: 'transform 4s ease-out',
               zIndex: imageStyles[index].zIndex,
             }}
@@ -80,7 +125,7 @@ export default function HeroSection() {
       </div>
       
       {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#050816]/80 via-transparent to-[#0B1026] z-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#050816]/90 md:from-[#050816]/80 via-transparent to-[#0B1026] z-10" />
       
       {/* Main content */}
       <div className="relative z-20 h-full flex flex-col justify-center items-center px-6 md:px-12">
@@ -113,6 +158,7 @@ export default function HeroSection() {
           
           {/* CTA Button with special effects */}
           <div className={`transition-all duration-700 ${animationComplete ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-12'}`} style={{ transitionDelay: '800ms' }}>
+           <Link href="/movie-suggestion" passHref>
             <button className="group relative overflow-hidden font-heading font-medium text-lg px-8 py-4 rounded-full bg-gradient-to-r from-[#00AAFF] to-[#B14EFF] text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-105 transition-all duration-300">
               <span className="relative z-10 flex items-center gap-2">
                 Get Your AI Buddy <span className="text-xs">It's Free</span>
@@ -120,6 +166,7 @@ export default function HeroSection() {
               </span>
               <span className="absolute inset-0 bg-gradient-to-r from-[#00F5D4] to-[#00AAFF] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0" />
             </button>
+            </Link>
           </div>
           
           {/* Scroll indicator */}

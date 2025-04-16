@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Film, Coffee, Globe, Check, ChevronDown, X } from 'lucide-react';
 
 export const BasicPreferences = ({ onNext, setPreferences, initialPreferences = {} }) => {
@@ -9,6 +9,9 @@ export const BasicPreferences = ({ onNext, setPreferences, initialPreferences = 
   const [language, setLanguage] = useState(initialPreferences.language || '');
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const [formComplete, setFormComplete] = useState(false);
+  
+  // Refs for scrolling
+  const languageSectionRef = useRef(null);
 
   const genres = [
     { id: 'action', name: 'Action', icon: '🔥' },
@@ -46,12 +49,22 @@ export const BasicPreferences = ({ onNext, setPreferences, initialPreferences = 
     setFormComplete(genre.length > 0 && mood && language);
   }, [genre, mood, language]);
 
+  // Effect to scroll to language section when mood is selected
+  useEffect(() => {
+    if (mood && languageSectionRef.current) {
+      languageSectionRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, [mood]);
+
   const toggleGenre = (g) => {
     if (genre.includes(g)) {
       setGenre(prev => prev.filter(item => item !== g));
     } else {
-      // Limit to 3 selections
-      if (genre.length < 3) {
+      // Limit to 2 selections (changed from 3)
+      if (genre.length < 2) {
         setGenre(prev => [...prev, g]);
       }
     }
@@ -69,17 +82,14 @@ export const BasicPreferences = ({ onNext, setPreferences, initialPreferences = 
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-5xl font-heading text-[#00AAFF] mb-3">Let's Get To Know You</h2>
-        <p className="text-[#A3A8B8] text-sm md:text-base max-w-xl mx-auto">
-          Help our AI understand your taste by sharing your preferences
-        </p>
+        <h2 className="text-xl md:text-xl font-semibold text-[#00AAFF] mb-3">Let's Get To Know You</h2>
       </div>
 
       {/* Genres Section */}
       <div className="bg-[#1A1E2E]/90 rounded-2xl p-6 shadow-lg shadow-blue-500/20 backdrop-blur-md border border-[#00AAFF]/20 transition-all hover:border-[#00AAFF]/40">
         <div className="flex items-center mb-4">
           <Film className="text-[#00F5D4] mr-2" size={20} />
-          <h3 className="text-xl font-semibold text-[#EEFFFF]">Pick Your Top Genres <span className="text-sm font-normal text-[#A3A8B8]">(up to 3)</span></h3>
+          <h3 className="text-xl font-semibold text-[#EEFFFF]">Pick Your Top Genres <span className="text-sm font-normal text-[#A3A8B8]">(up to 2)</span></h3>
         </div>
         
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -141,7 +151,10 @@ export const BasicPreferences = ({ onNext, setPreferences, initialPreferences = 
       </div>
 
       {/* Language Section - Table Popup Style */}
-      <div className="bg-[#1A1E2E]/90 rounded-2xl p-6 shadow-lg shadow-blue-500/20 backdrop-blur-md border border-[#00AAFF]/20 transition-all hover:border-[#00AAFF]/40">
+      <div 
+        ref={languageSectionRef}
+        className="bg-[#1A1E2E]/90 rounded-2xl p-6 shadow-lg shadow-blue-500/20 backdrop-blur-md border border-[#00AAFF]/20 transition-all hover:border-[#00AAFF]/40"
+      >
         <div className="flex items-center mb-4">
           <Globe className="text-[#B14EFF] mr-2" size={20} />
           <h3 className="text-xl font-semibold text-[#EEFFFF]">Preferred Language</h3>

@@ -86,12 +86,9 @@ export const MovieTinder = ({ onNext, onBack, setMovieTinderChoice }) => {
     <div className="flex flex-col items-center gap-8 animate-fade-in">
       {step === 1 && selectedMoviePair && (
         <>
-          <h2 className="text-3xl md:text-5xl font-heading text-center text-[#B14EFF]">
+          <h2 className="text-xl md:text-xl font-semibold text-center text-[#B14EFF]">
             Which Movie Speaks To You?
           </h2>
-          <p className="text-[#A3A8B8] text-sm md:text-base max-w-xl mx-auto text-center">
-            Your choice helps us understand your movie preferences
-          </p>
 
           {/* Movie choice cards - side by side on desktop, stacked on mobile */}
           <div className="w-full flex flex-col md:flex-row gap-6 justify-center">

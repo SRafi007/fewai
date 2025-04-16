@@ -42,28 +42,8 @@ export default function MovieSuggestionPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#050816] to-[#0B1026] text-[#EEFFFF] font-body">
-      {/* Header with glowing border */}
-      <header className="py-4 px-6 md:px-12 border-b border-[#00AAFF]/30 backdrop-blur-md bg-[#1A1E2E]/50 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="flex items-center">
-            <Film className="text-[#00AAFF] mr-2" size={24} />
-            <h1 className="text-xl md:text-2xl font-heading bg-gradient-to-r from-[#00AAFF] to-[#00F5D4] text-transparent bg-clip-text">AI Movie Oracle</h1>
-          </div>
-          
-          <div className="flex items-center text-sm md:text-base text-[#A3A8B8]">
-            <span className="hidden md:inline-flex items-center">
-              {getStepIcon()}
-              {getStepTitle()}
-            </span>
-            <div className="ml-4 py-1 px-3 rounded-full bg-[#3A0CA3]/40 border border-[#B14EFF]/30">
-              Step {step}/{totalSteps}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="px-4 py-8 md:px-12 md:py-10">
-        <div className="max-w-4xl mx-auto">
+      <main className="px-4 py-16 md:px-12 md:py-16">
+        <div className="max-w-4xl mx-auto">          
           <ProgressBar currentStep={step} totalSteps={totalSteps} />
           
           <div className="mt-8 md:mt-12">

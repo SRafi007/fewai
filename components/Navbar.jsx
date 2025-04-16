@@ -1,9 +1,11 @@
-
 'use client'
 import React, { useState, useEffect } from 'react';
 import { Home, Search, Film, Brain, Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function FuturisticNavbar() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [activeItem, setActiveItem] = useState('home');
   const [scrolled, setScrolled] = useState(false);
@@ -18,11 +20,19 @@ export default function FuturisticNavbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Set active item based on the current path
+  useEffect(() => {
+    if (pathname === '/') setActiveItem('home');
+    else if (pathname === '/discover') setActiveItem('discover');
+    else if (pathname === '/movies') setActiveItem('movies');
+    else if (pathname === '/ai-lab') setActiveItem('ai');
+  }, [pathname]);
+
   const navItems = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'discover', label: 'Discover', icon: Search },
-    { id: 'movies', label: 'Movies', icon: Film },
-    { id: 'ai', label: 'AI Lab', icon: Brain },
+    { id: 'home', label: 'Home', icon: Home, href: '/' },
+    { id: 'discover', label: 'Discover', icon: Search, href: '/discover' },
+    { id: 'movies', label: 'Movies', icon: Film, href: '/movies' },
+    { id: 'ai', label: 'AI Lab', icon: Brain, href: '/ai-lab' },
   ];
 
   return (
@@ -39,8 +49,9 @@ export default function FuturisticNavbar() {
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
-                <button
+                <Link
                   key={item.id}
+                  href={item.href}
                   onClick={() => setActiveItem(item.id)}
                   className={`relative flex items-center justify-center gap-2 px-5 py-3 rounded-full transition-all duration-300 ${
                     activeItem === item.id 
@@ -55,7 +66,7 @@ export default function FuturisticNavbar() {
                   {activeItem === item.id && (
                     <span className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 opacity-20" />
                   )}
-                </button>
+                </Link>
               );
             })}
           </div>
@@ -81,28 +92,30 @@ export default function FuturisticNavbar() {
                 const Icon = item.icon;
                 if (index > 1) return null; // Only show first two items on small screens
                 return (
-                  <button
+                  <Link
                     key={item.id}
+                    href={item.href}
                     onClick={() => setActiveItem(item.id)}
                     className={`relative flex items-center justify-center px-4 py-2 transition-all duration-300 ${
                       activeItem === item.id ? 'text-white' : 'text-gray-400'
                     }`}
                   >
                     <Icon size={18} />
-                  </button>
+                  </Link>
                 );
               })}
             </div>
             
             {/* Always show AI Lab icon on right */}
-            <button
+            <Link
+              href="/ai-lab"
               onClick={() => setActiveItem('ai')}
               className={`p-3 transition-all duration-300 ${
                 activeItem === 'ai' ? 'text-white' : 'text-gray-400'
               }`}
             >
               <Brain size={20} />
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
@@ -114,8 +127,9 @@ export default function FuturisticNavbar() {
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
-                <button
+                <Link
                   key={item.id}
+                  href={item.href}
                   onClick={() => {
                     setActiveItem(item.id);
                     setIsOpen(false);
@@ -128,7 +142,7 @@ export default function FuturisticNavbar() {
                 >
                   <Icon size={18} />
                   <span className="font-medium">{item.label}</span>
-                </button>
+                </Link>
               );
             })}
           </div>
